@@ -1,0 +1,1141 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "team": "9013688424",
+        "events": [
+          "taskStatusUpdated"
+        ],
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.clickUpTrigger",
+      "typeVersion": 1,
+      "position": [
+        48,
+        1232
+      ],
+      "id": "39c26cda-eb9f-4724-8cb9-d31bed66e28f",
+      "name": "ClickUp Trigger",
+      "webhookId": "d06cc6d3-ea42-4271-b4e1-cbbca31afae1",
+      "credentials": {
+        "clickUpApi": {
+          "id": "GiJwVqTWEhxRjjYE",
+          "name": "ClickUp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "id": "={{ $json.task_id }}"
+      },
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [
+        496,
+        1232
+      ],
+      "id": "947a3c3a-d79c-4220-b710-99391755765b",
+      "name": "Get a task",
+      "credentials": {
+        "clickUpApi": {
+          "id": "GkwqyPjWqOdC9Ti6",
+          "name": "zeeshan_creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      customers: items.map(item => item.json)\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        944,
+        1232
+      ],
+      "id": "bfb23a4c-9609-4055-aac7-0e5fc1a9e3ec",
+      "name": "Convert to array"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the name you want to search\nconst searchName = $('Get a task').first().json.name?.toLowerCase();\n\n// Get the customers array\nconst customers = $json.customers || [];\n\n// Find all matching customers (case-insensitive)\nconst matchedCustomers = customers.filter(customer =>\n  customer.DisplayName?.toLowerCase() === searchName\n);\n\n// Return a single item containing matched customers and info\nreturn [\n  {\n    json: {\n      found: matchedCustomers.length > 0,\n      searchName,\n      totalCustomers: customers.length,\n      matchedCustomers\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1168,
+        1232
+      ],
+      "id": "f46f2668-c637-43c0-a0ee-077c8e46e5cf",
+      "name": "Check if exists"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "id-1",
+              "leftValue": "={{ $json.found }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "f3ee5b89-373d-48d0-a9a4-8a6393226d82",
+      "name": "IF - Customer Exists?1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1392,
+        1232
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "displayName": "={{ $('Get a task').first().json.custom_fields[2].value }}",
+        "additionalFields": {}
+      },
+      "name": "QuickBooks",
+      "type": "n8n-nodes-base.quickbooks",
+      "position": [
+        1808,
+        1344
+      ],
+      "typeVersion": 1,
+      "id": "685dd2df-fb4c-423f-b0b8-bbe97e181dfd",
+      "credentials": {
+        "quickBooksOAuth2Api": {
+          "id": "cX7Sgv7ZHElp5fYz",
+          "name": "QuickBooks Online account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "invoice",
+        "operation": "create",
+        "CustomerRef": "={{ $json.matchedCustomers[0].Id }}",
+        "Line": [
+          {
+            "Description": "={{ $('Get a task').first().json.description }}",
+            "DetailType": "SalesItemLineDetail",
+            "itemId": "4",
+            "Amount": "={{ $('Get a task').first().json.custom_fields[3].value }}"
+          }
+        ],
+        "additionalFields": {
+          "DueDate": "={{ $now.plus(30, 'days').format('yyyy-MM-dd') }}"
+        }
+      },
+      "name": "Create Inoice",
+      "type": "n8n-nodes-base.quickbooks",
+      "position": [
+        1952,
+        1168
+      ],
+      "typeVersion": 1,
+      "id": "15fd6627-7a14-4d5a-83ab-c2de50454c1b",
+      "credentials": {
+        "quickBooksOAuth2Api": {
+          "id": "cX7Sgv7ZHElp5fYz",
+          "name": "QuickBooks Online account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "##Whenever a lead is moved it checks it move to closed won or not \n",
+        "height": 416,
+        "width": 656
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        1088
+      ],
+      "id": "4dce267b-930c-49e0-bd1c-e32f7df0ab12",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Gets the customer from the QuickBooks and see if it exists or not\n",
+        "height": 416,
+        "width": 896,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        672,
+        1088
+      ],
+      "id": "29da2447-12f6-4162-a53e-a7dd2d61dd26",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "##Create an invoice if exists \nor\nCreate an customer and then create an invoice",
+        "height": 416,
+        "width": 848,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        1088
+      ],
+      "id": "7ba0779a-fa05-4977-9588-ae4d3bb28a59",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Send notification on slack and store it in google sheets\n",
+        "height": 416,
+        "width": 1984,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2480,
+        1088
+      ],
+      "id": "73c22c48-ec39-4518-b89a-6dcb21ceb90e",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        4144,
+        1232
+      ],
+      "id": "d309b76b-c58d-44c2-8c33-e5d03e18820d",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "resource": "invoice",
+        "invoiceId": "={{ $json.Id }}",
+        "download": true,
+        "fileName": "Invoice.pdf"
+      },
+      "type": "n8n-nodes-base.quickbooks",
+      "typeVersion": 1,
+      "position": [
+        2320,
+        1232
+      ],
+      "id": "e98aa925-cfcc-4ff1-8155-11411d847a8f",
+      "name": "Get an invoice",
+      "credentials": {
+        "quickBooksOAuth2Api": {
+          "id": "cX7Sgv7ZHElp5fYz",
+          "name": "QuickBooks Online account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "invoice",
+        "operation": "create",
+        "CustomerRef": "={{ $json.Id }}",
+        "Line": [
+          {
+            "Description": "={{ $('Get a task').first().json.description }}",
+            "DetailType": "SalesItemLineDetail",
+            "itemId": "4",
+            "Amount": "={{ $('Get a task').first().json.custom_fields[3].value }}"
+          }
+        ],
+        "additionalFields": {
+          "DueDate": "={{ $now.plus(30, 'days').format('yyyy-MM-dd') }}"
+        }
+      },
+      "name": "Create Inoice for recent customer",
+      "type": "n8n-nodes-base.quickbooks",
+      "position": [
+        2112,
+        1344
+      ],
+      "typeVersion": 1,
+      "id": "fb152aae-0209-4757-8870-b023ea2da7fd",
+      "credentials": {
+        "quickBooksOAuth2Api": {
+          "id": "cX7Sgv7ZHElp5fYz",
+          "name": "QuickBooks Online account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "=https://docs.google.com/spreadsheets/d/111Q8iigqhKU_ch_boe1VZsCip8wd7JoK4-8sQW_AJHA/edit?usp=sharing",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Handoffs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/111Q8iigqhKU_ch_boe1VZsCip8wd7JoK4-8sQW_AJHA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Deal Name": "={{ $('Get a task').first().json.custom_fields[2].value }}",
+            "Close Date": "=",
+            "Deal Value": "={{ $('Get a task').first().json.custom_fields[2].value }}",
+            "ClickUp Link": "=",
+            "Created At": "={{ $now.toISO() }}",
+            "Status": "={{ $('Get a task').first().json.status.status }}"
+          },
+          "matchingColumns": [
+            "Deal Name"
+          ],
+          "schema": [
+            {
+              "id": "Deal Name",
+              "displayName": "Deal Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Close Date",
+              "displayName": "Close Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Deal Value",
+              "displayName": "Deal Value",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ClickUp Link",
+              "displayName": "ClickUp Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "12be6e61-ccfb-46ba-95a3-6659099d26fe",
+      "name": "Google Sheets - Log Handoff",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3472,
+        1232
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "QWk3AmwxGYb0G5qh",
+          "name": "awais"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "#ops-handoffs"
+        },
+        "text": "=🎉 NEW DEAL CLOSED ──────────────────────────────────────── Client:  {{ $('Get a task').first().json.custom_fields[2].value }}     Value:        {{ $('Get a task').first().json.custom_fields[3].value }} Salesperson:  {{ $('Get a task').first().json.assignees[0].username }}  ✅ ClickUp task:     {{ $('Get a task').first().json.name }} ✅ Invoice drafted:  Invoice #{{ $json.Id }}  INVOICE (QBO) ──────────────────────────────────────── Invoice #:    {{ $json.Id }} Here's the invoive pdf @ops-team — onboarding starts Monday ──────────────────────────────────────── _Auto-generated from ClickUp_",
+        "otherOptions": {}
+      },
+      "id": "e097029e-cb56-446d-864f-91d91885d034",
+      "name": "Slack - Notify Ops Team",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        2528,
+        1152
+      ],
+      "webhookId": "4298111f-74f3-476d-8e29-57ab6f4d867a",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "SfcbSwqIADG4ojY7",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true,
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.quickbooks",
+      "typeVersion": 1,
+      "position": [
+        736,
+        1232
+      ],
+      "id": "3d7894ed-ef96-4dd6-bc70-6f07dfc0fdad",
+      "name": "Get many customers",
+      "credentials": {
+        "quickBooksOAuth2Api": {
+          "id": "cX7Sgv7ZHElp5fYz",
+          "name": "QuickBooks Online account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "id-1",
+              "leftValue": "={{ $json.history_items[0].after.status }}",
+              "rightValue": "closed won",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "58b46323-0a79-430e-9728-f26da9303566",
+      "name": "Filter for Closed Won",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        272,
+        1232
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "options": {
+          "channelId": "C0A5UEVPZDG"
+        }
+      },
+      "id": "79365559-1ddd-4ae6-a14a-884b15fe4df1",
+      "name": "Slack - Notify Ops Team1",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        2544,
+        1360
+      ],
+      "webhookId": "4298111f-74f3-476d-8e29-57ab6f4d867a",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "SfcbSwqIADG4ojY7",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "716dbcfc-5bae-4409-b087-2209f2644600",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        3248,
+        1232
+      ],
+      "id": "226dde98-db1c-4802-9baa-bd238906d84b",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Get a task').first().json.custom_fields[5].value }}",
+        "subject": "Welcome to Reprise AI — Your Project Kickoff Details",
+        "message": "=Hi {{ $('Get a task').first().json.custom_fields[2].value }},\nThank you for partnering with Reprise AI on your {{ $('Get a task').first().json.text_content }}. We're excited to get started.\nHere's everything you need:\n1. Review & Sign Your SOW\n[SOW Link - auto-attached]\n2. Complete Payment\n[QuickBooks Payment Link - auto-generated]\n3. Complete Your Onboarding Form\nThis collects the credentials, documentation, and project details we need to begin:\n[ClickUp Form Link]\n📹 Watch: How to complete the onboarding form (2 min)\n4. Accept Your ClickUp Invite\nCheck your email for the ClickUp workspace invitation. This is your project hub for tracking progress, reviewing deliverables, and communicating with our team.\n📹 Watch: Welcome to your ClickUp space (3 min)\n5. Schedule Your Kickoff Call\nBook a 60-minute session to align on priorities:\nhttps://calendly.com/syntrexai/general-consultation\n\nOnce we receive your signed SOW, payment, and onboarding form, we'll begin immediately.\n\nLooking forward to building with you!\n\nBest,\nKeshav & Nick\nReprise AI",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        3920,
+        1232
+      ],
+      "id": "28ea30be-e83d-422e-a989-b04a3640c45c",
+      "name": "Send a message",
+      "webhookId": "418c2c52-ac3e-47f6-bf75-84acc2497d25",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "aPifK9wO5C9dTtNf",
+          "name": "awais"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "invoice",
+        "invoiceId": "={{ $('Get an invoice').item.json.Id }}",
+        "download": true,
+        "fileName": "Invoice.pdf"
+      },
+      "type": "n8n-nodes-base.quickbooks",
+      "typeVersion": 1,
+      "position": [
+        3696,
+        1232
+      ],
+      "id": "693d0276-f9ea-4a01-a8c6-5c1d8031ba3a",
+      "name": "Get an invoice1",
+      "credentials": {
+        "quickBooksOAuth2Api": {
+          "id": "cX7Sgv7ZHElp5fYz",
+          "name": "QuickBooks Online account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2800,
+        1232
+      ],
+      "id": "d2ab4a5b-9a7b-4dd2-98d7-1187132b0524",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "sendAndWait",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "#ops-handoffs"
+        },
+        "message": "=Do you want to accept this invoice so that it can be forwarded to the customer",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double"
+          }
+        },
+        "options": {}
+      },
+      "id": "dd7f50da-4c3f-409b-aa76-a9db10df8017",
+      "name": "Ask for confirmation",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        3024,
+        1232
+      ],
+      "webhookId": "4298111f-74f3-476d-8e29-57ab6f4d867a",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "SfcbSwqIADG4ojY7",
+          "name": "Slack account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "ClickUp Trigger": {
+      "main": [
+        [
+          {
+            "node": "Filter for Closed Won",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a task": {
+      "main": [
+        [
+          {
+            "node": "Get many customers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to array": {
+      "main": [
+        [
+          {
+            "node": "Check if exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if exists": {
+      "main": [
+        [
+          {
+            "node": "IF - Customer Exists?1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Customer Exists?1": {
+      "main": [
+        [
+          {
+            "node": "Create Inoice",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "QuickBooks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "QuickBooks": {
+      "main": [
+        [
+          {
+            "node": "Create Inoice for recent customer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Inoice": {
+      "main": [
+        [
+          {
+            "node": "Get an invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get an invoice": {
+      "main": [
+        [
+          {
+            "node": "Slack - Notify Ops Team",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Slack - Notify Ops Team1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Inoice for recent customer": {
+      "main": [
+        [
+          {
+            "node": "Get an invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets - Log Handoff": {
+      "main": [
+        [
+          {
+            "node": "Get an invoice1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack - Notify Ops Team": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many customers": {
+      "main": [
+        [
+          {
+            "node": "Convert to array",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter for Closed Won": {
+      "main": [
+        [
+          {
+            "node": "Get a task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack - Notify Ops Team1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets - Log Handoff",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get an invoice1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Ask for confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ask for confirmation": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {
+    "ClickUp Trigger": [
+      {
+        "event": "taskStatusUpdated",
+        "history_items": [
+          {
+            "id": "4890401794264093977",
+            "type": 1,
+            "date": "1767286801265",
+            "field": "status",
+            "parent_id": "901323703490",
+            "data": {
+              "status_type": "done"
+            },
+            "source": null,
+            "user": {
+              "id": 236434925,
+              "username": "Awais Ali",
+              "email": "letsautomatewithawais@gmail.com",
+              "color": null,
+              "initials": "AA",
+              "profilePicture": null,
+              "role": 3,
+              "role_subtype": 0
+            },
+            "before": {
+              "status": "new lead",
+              "color": "#3e63dd",
+              "orderindex": 0,
+              "type": "open"
+            },
+            "after": {
+              "status": "closed won",
+              "color": "#30a46c",
+              "orderindex": 7,
+              "type": "done"
+            }
+          }
+        ],
+        "task_id": "86ae6qc9q",
+        "team_id": "9013688424",
+        "webhook_id": "e9cc7d30-8291-41fb-80ed-d79afdaec12b"
+      }
+    ],
+    "QuickBooks": [
+      {
+        "Taxable": true,
+        "Job": false,
+        "BillWithParent": false,
+        "Balance": 0,
+        "BalanceWithJobs": 0,
+        "CurrencyRef": {
+          "value": "USD",
+          "name": "United States Dollar"
+        },
+        "PreferredDeliveryMethod": "Print",
+        "IsProject": false,
+        "domain": "QBO",
+        "sparse": false,
+        "Id": "68",
+        "SyncToken": "0",
+        "MetaData": {
+          "CreateTime": "2026-01-01T09:07:36-08:00",
+          "LastUpdatedTime": "2026-01-01T09:07:36-08:00"
+        },
+        "FullyQualifiedName": "Tayyab",
+        "DisplayName": "Tayyab",
+        "PrintOnCheckName": "Tayyab",
+        "Active": true,
+        "DefaultTaxCodeRef": {
+          "value": "2"
+        }
+      }
+    ],
+    "Create Inoice for recent customer": [
+      {
+        "AllowIPNPayment": false,
+        "AllowOnlinePayment": false,
+        "AllowOnlineCreditCardPayment": true,
+        "AllowOnlineACHPayment": true,
+        "domain": "QBO",
+        "sparse": false,
+        "Id": "164",
+        "SyncToken": "0",
+        "MetaData": {
+          "CreateTime": "2026-01-01T09:07:37-08:00",
+          "LastModifiedByRef": {
+            "value": "9341455983294091"
+          },
+          "LastUpdatedTime": "2026-01-01T09:07:37-08:00"
+        },
+        "CustomField": [],
+        "DocNumber": "1057",
+        "TxnDate": "2026-01-01",
+        "CurrencyRef": {
+          "value": "USD",
+          "name": "United States Dollar"
+        },
+        "LinkedTxn": [],
+        "Line": [
+          {
+            "Id": "1",
+            "LineNum": 1,
+            "Amount": 300,
+            "DetailType": "SalesItemLineDetail",
+            "SalesItemLineDetail": {
+              "ItemRef": {
+                "value": "4",
+                "name": "Design"
+              },
+              "ItemAccountRef": {
+                "value": "82",
+                "name": "Design income"
+              },
+              "TaxCodeRef": {
+                "value": "NON"
+              }
+            },
+            "CustomExtensions": []
+          },
+          {
+            "Amount": 300,
+            "DetailType": "SubTotalLineDetail",
+            "SubTotalLineDetail": {}
+          }
+        ],
+        "TxnTaxDetail": {
+          "TotalTax": 0
+        },
+        "CustomerRef": {
+          "value": "68",
+          "name": "Tayyab"
+        },
+        "ShipFromAddr": {
+          "Id": "115",
+          "Line1": "123 Sierra Way",
+          "Line2": "San Pablo, CA  87999"
+        },
+        "DueDate": "2026-01-31",
+        "TotalAmt": 300,
+        "ApplyTaxAfterDiscount": false,
+        "PrintStatus": "NeedToPrint",
+        "EmailStatus": "NotSet",
+        "Balance": 300
+      }
+    ],
+    "Slack - Notify Ops Team": [
+      {
+        "ok": true,
+        "channel": "C0A5UEVPZDG",
+        "message": {
+          "user": "U08CQ76VBD0",
+          "type": "message",
+          "ts": "1767287939.879329",
+          "bot_id": "B08DD1U6ULQ",
+          "app_id": "A016X0AT6QL",
+          "text": ":tada: NEW DEAL CLOSED ──────────────────────────────────────── Client:  Tayyab     Value:        300 Salesperson:  Awais Ali  :white_check_mark: ClickUp task:     Form Submission - #2026-01-01T11:59:17-05:00 :white_check_mark: Invoice drafted:  Invoice #164  INVOICE (QBO) ──────────────────────────────────────── Invoice #:    164 Here's the invoive pdf @ops-team — onboarding starts Monday ──────────────────────────────────────── _Auto-generated from ClickUp_\n_Automated with this <https://keshavs.app.n8n.cloud/workflow/0e6a9AmWCDjqMWBi?utm_source=n8n-internal&amp;utm_medium=powered_by&amp;utm_campaign=n8n-nodes-base.slack_f91dc7df1efe0781f58b1cf5d0bf39bf4861046fb2bcd9901d1cd366fb7c5ffe|n8n workflow>_",
+          "team": "T08CHJBQJUE",
+          "bot_profile": {
+            "id": "B08DD1U6ULQ",
+            "app_id": "A016X0AT6QL",
+            "name": "n8n.cloud",
+            "icons": {
+              "image_36": "https://avatars.slack-edge.com/2025-11-11/9894814927220_b1da99c80f22031c7ca9_36.png",
+              "image_48": "https://avatars.slack-edge.com/2025-11-11/9894814927220_b1da99c80f22031c7ca9_48.png",
+              "image_72": "https://avatars.slack-edge.com/2025-11-11/9894814927220_b1da99c80f22031c7ca9_72.png"
+            },
+            "deleted": false,
+            "updated": 1762870867,
+            "team_id": "T08CHJBQJUE"
+          },
+          "blocks": [
+            {
+              "type": "rich_text",
+              "block_id": "R8Fp",
+              "elements": [
+                {
+                  "type": "rich_text_section",
+                  "elements": [
+                    {
+                      "type": "emoji",
+                      "name": "tada",
+                      "unicode": "1f389"
+                    },
+                    {
+                      "type": "text",
+                      "text": " NEW DEAL CLOSED ──────────────────────────────────────── Client:  Tayyab     Value:        300 Salesperson:  Awais Ali  "
+                    },
+                    {
+                      "type": "emoji",
+                      "name": "white_check_mark",
+                      "unicode": "2705"
+                    },
+                    {
+                      "type": "text",
+                      "text": " ClickUp task:     Form Submission - #2026-01-01T11:59:17-05:00 "
+                    },
+                    {
+                      "type": "emoji",
+                      "name": "white_check_mark",
+                      "unicode": "2705"
+                    },
+                    {
+                      "type": "text",
+                      "text": " Invoice drafted:  Invoice #164  INVOICE (QBO) ──────────────────────────────────────── Invoice #:    164 Here's the invoive pdf @ops-team — onboarding starts Monday ──────────────────────────────────────── "
+                    },
+                    {
+                      "type": "text",
+                      "text": "Auto-generated from ClickUp",
+                      "style": {
+                        "italic": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": "\n"
+                    },
+                    {
+                      "type": "text",
+                      "text": "Automated with this ",
+                      "style": {
+                        "italic": true
+                      }
+                    },
+                    {
+                      "type": "link",
+                      "url": "https://keshavs.app.n8n.cloud/workflow/0e6a9AmWCDjqMWBi?utm_source=n8n-internal&amp;utm_medium=powered_by&amp;utm_campaign=n8n-nodes-base.slack_f91dc7df1efe0781f58b1cf5d0bf39bf4861046fb2bcd9901d1cd366fb7c5ffe",
+                      "text": "n8n workflow",
+                      "style": {
+                        "italic": true
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "message_timestamp": "1767287939.879329"
+      }
+    ],
+    "Slack - Notify Ops Team1": [
+      {
+        "id": "F0A6SA6E865",
+        "created": 1767287940,
+        "timestamp": 1767287940,
+        "name": "Invoice.pdf",
+        "title": "Invoice.pdf",
+        "mimetype": "",
+        "filetype": "",
+        "pretty_type": "",
+        "user": "U08CQ76VBD0",
+        "user_team": "T08CHJBQJUE",
+        "editable": false,
+        "size": 14425,
+        "mode": "hosted",
+        "is_external": false,
+        "external_type": "",
+        "is_public": false,
+        "public_url_shared": false,
+        "display_as_bot": false,
+        "username": "",
+        "url_private": "https://files.slack.com/files-pri/T08CHJBQJUE-F0A6SA6E865/invoice.pdf",
+        "url_private_download": "https://files.slack.com/files-pri/T08CHJBQJUE-F0A6SA6E865/download/invoice.pdf",
+        "media_display_type": "unknown",
+        "permalink": "https://syntrexai.slack.com/files/U08CQ76VBD0/F0A6SA6E865/invoice.pdf",
+        "permalink_public": "https://slack-files.com/T08CHJBQJUE-F0A6SA6E865-e5fe80c4dd",
+        "comments_count": 0,
+        "is_starred": false,
+        "shares": {},
+        "channels": [],
+        "groups": [],
+        "ims": [],
+        "has_more_shares": false,
+        "has_rich_preview": false,
+        "file_access": "visible"
+      }
+    ],
+    "Ask for confirmation": [
+      {
+        "data": {
+          "approved": true
+        }
+      }
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f91dc7df1efe0781f58b1cf5d0bf39bf4861046fb2bcd9901d1cd366fb7c5ffe"
+  }
+}
